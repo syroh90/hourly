@@ -4,7 +4,14 @@ const WD = ['일', '월', '화', '수', '목', '금', '토'];
 // 알림: 아이폰 캘린더의 '시간일기' 캘린더(iCloud)가 매일 이 시각 정각에 알림을 보낸다. 바꿀 때는 캘린더와 함께 고친다.
 const HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 const ACTIVITIES = ['업무', '회의', '이동', '식사', '휴식', '운동', '공부', '가족·육아', '대화·모임', '집안일', '휴대폰·영상', '기타'];
-const EMOTIONS = ['평온', '기쁨', '감사', '몰입', '설렘', '뿌듯함', '지루함', '피곤', '불안', '초조', '압박감', '짜증', '화', '슬픔', '외로움', '허탈', '무기력', '죄책감'];
+const EMOTION_GROUPS = [
+  { name: '편안·즐거움', items: ['평온', '기쁨', '감사', '몰입', '설렘', '뿌듯함', '자신감', '안도', '홀가분함', '호기심', '애정', '희망'] },
+  { name: '관계·나에 대한 감정', items: ['인정욕구', '소외감', '부끄러움', '수치심', '질투', '부러움', '열등감', '죄책감', '미안함', '서운함', '거절감', '소속감'] },
+  { name: '불안·긴장', items: ['불안', '초조', '압박감', '걱정', '두려움', '긴장', '막막함'] },
+  { name: '화·불편', items: ['짜증', '화', '억울함', '답답함', '원망', '경멸'] },
+  { name: '가라앉음·지침', items: ['피곤', '지루함', '무기력', '허탈', '공허함', '슬픔', '우울', '외로움', '그리움', '실망'] },
+];
+const EMOTIONS = EMOTION_GROUPS.flatMap(g => g.items);
 const URGES = ['담배', '술', '단 것·과식', '휴대폰·SNS', '쇼핑', '쉬고 싶음', '자고 싶음', '도망치고 싶음', '인정받고 싶음', '대화하고 싶음', '혼자 있고 싶음'];
 const MOOD = ['아주 나쁨', '나쁨', '보통', '좋음', '아주 좋음'];
 const ENERGY = ['바닥', '낮음', '보통', '높음', '넘침'];
@@ -130,7 +137,8 @@ function renderNow() {
     </div>
     <div class="card">
       <div class="q"><span>지금 느끼는 감정</span><small class="muted">여러 개 선택</small></div>
-      ${chipsHTML(EMOTIONS, f.emotions, 'emotion')}
+      ${EMOTION_GROUPS.map(g => `<div class="egroup">${g.name}</div>${chipsHTML(g.items, f.emotions.filter(x => g.items.includes(x)), 'emotion')}`).join('')}
+      ${f.emotions.some(x => !EMOTIONS.includes(x)) ? `<div class="egroup">기타</div>${chipsHTML([], f.emotions.filter(x => !EMOTIONS.includes(x)), 'emotion')}` : ''}
     </div>
     <div class="card">
       <div class="q"><span>올라온 욕구·충동</span><small class="muted">알아차린 것만</small></div>

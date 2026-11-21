@@ -1,5 +1,5 @@
 // 앱 파일을 캐시해 두고 인터넷이 없어도 열리게 한다. 캐시를 먼저 보여 주고 뒤에서 새 버전을 받아 둔다.
-const VERSION = 'hourly-v1';
+const VERSION = 'hourly-v2';
 const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
